@@ -11,11 +11,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.18.1",
     "cors": "^2.8.4",
     "eslint": "^4.7.2",
     "express": "^4.15.4",
     "joi": "^11.0.3",
+    "jsonwebtoken": "^8.0.1",
     "morgan": "^1.8.2",
     "nodemon": "^1.12.1",
     "sequelize": "^4.10.0",
