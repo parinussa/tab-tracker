@@ -15,13 +15,31 @@
         <v-btn
           dark
           class="cyan"
-          @click="navigateTo({
+          :to="{
             name: 'song-edit',
-            params: {
-              songId: song.id
+            params() {
+              return {
+                songId: song.id
+              }
             }
-          })">
+          }">
           Edit
+        </v-btn>
+
+        <v-btn
+          v-if="isUserLoggedIn && !bookmark"
+          dark
+          class="cyan"
+          @click="setAsBookmark">
+          Set as Bookmark
+        </v-btn>
+
+        <v-btn
+          v-if="isUserLoggedIn && bookmark"
+          dark
+          class="cyan"
+          @click="unSetAsBookmark">
+          Unset as bookmark
         </v-btn>
       </v-flex>
 
@@ -35,19 +53,59 @@
 </template>
 
 <script>
-import Panel from '@/components/Panel'
+import { mapState } from 'vuex'
+import BookmarksService from '@/services/BookmarksService'
 
 export default {
+  data () {
+    return {
+      bookmark: null
+    }
+  },
   props: [
     'song'
   ],
-  methods: {
-    navigateTo (route) {
-      this.$router.push(route)
+  computed: {
+    ...mapState([
+      'isUserLoggedIn'
+    ])
+  },
+  watch: {
+    async song () {
+      if (!this.isUserLoggedIn) {
+        return
+      }
+
+      try {
+        this.bookmark = (await BookmarksService.index({
+          songId: this.song.id,
+          userId: this.$store.state.user.id
+        })).data
+      } catch (e) {
+        console.log(e)
+      }
     }
   },
-  components: {
-    Panel
+  methods: {
+    async setAsBookmark () {
+      try {
+        this.bookmark = (await BookmarksService.post({
+          songId: this.song.id,
+          userId: this.$store.state.user.id
+        })).data
+      } catch (e) {
+        console.log(e)
+      }
+    },
+
+    async unSetAsBookmark () {
+      try {
+        await BookmarksService.delete(this.bookmark.id)
+        this.bookmark = null
+      } catch (e) {
+        console.log(e)
+      }
+    }
   }
 }
 </script>

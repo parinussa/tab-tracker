@@ -72,7 +72,7 @@
             v-model="song.tab"
           ></v-text-field>
 
-          <div class="error" v-if="error">
+          <div class="danger-alert" v-if="error">
             {{ error }}
           </div>
           <v-btn
@@ -88,7 +88,6 @@
 </template>
 
 <script>
-import Panel from '@/components/Panel'
 import SongsService from '@/services/SongsService'
 
 export default {
@@ -146,7 +145,6 @@ export default {
     }
   },
   components: {
-    Panel
   }
 }
 </script>
